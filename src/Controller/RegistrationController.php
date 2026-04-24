@@ -15,7 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RegistrationController extends AbstractController
 {
 
-    #[Route('/bienvenue', name: 'app_bienvenue')]
+    #[Route('/bienvenue', name: 'app_welcome')]
     public function welcome(): Response
     {
         return $this->render('registration/welcome.html.twig');

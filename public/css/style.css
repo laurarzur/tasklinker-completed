@@ -113,6 +113,10 @@ div#current-user {
     height: 55px;
 }
 
+div#current-user a {
+    text-decoration: none;
+}
+
 div#title-page h1 {
     font-family: Manrope;
     font-size: 22px;
@@ -386,7 +390,8 @@ table#team-container tr td {
     gap: 30px;
 }
 
-.employee-avatar {
+.employee-avatar,
+.user-avatar {
     width: 54px;
     height: 54px;
     display: flex;
@@ -401,6 +406,13 @@ table#team-container tr td {
     color: #fff;
     background: #1C5B50;
     border-radius: 50%;
+}
+
+.user-avatar {
+    background: white;
+    color: #1C5B50;
+    border: 1px solid #1C5B50;
+    margin-left: auto;
 }
 
 .employee-coords {
@@ -598,6 +610,21 @@ h2#welcome-subtitle {
 
 .options-divider::after {
     left: 42px
+}
+
+.form-text-container {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.already-logged-container {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.already-logged-container a {
+    color: white;
 }
 
 @media (max-width: 992px) {
