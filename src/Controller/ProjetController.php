@@ -66,10 +66,10 @@ class ProjetController extends AbstractController
         $statuts = $this->statutRepository->findAll();
         $projet = $this->projetRepository->find($id);
 
-        if ($projet) {
-            $this->denyAccessUnlessGranted('projet.employe', $projet);
-        } elseif (!$projet || $projet->isArchive()) {
+        if (!$projet || $projet->isArchive()) {
             return $this->redirectToRoute('app_projets');
+        } else {
+            $this->denyAccessUnlessGranted('projet.employe', $projet);
         }
 
         return $this->render('projet/projet.html.twig', [
