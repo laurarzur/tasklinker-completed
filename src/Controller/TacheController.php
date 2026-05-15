@@ -31,6 +31,8 @@ class TacheController extends AbstractController
 
         if (!$projet || $projet->isArchive()) {
             return $this->redirectToRoute('app_projets');
+        } else {
+            $this->denyAccessUnlessGranted('projet.employe', $projet);
         }
 
         $tache = new Tache();
@@ -54,9 +56,12 @@ class TacheController extends AbstractController
     public function supprimerTache(int $id): Response
     {
         $tache = $this->tacheRepository->find($id);
+        $projet = $tache->getProjet();
 
-        if (!$tache || $tache->getProjet()->isArchive()) {
+        if (!$tache || !$projet ||  $projet->isArchive()) {
             return $this->redirectToRoute('app_projets');
+        } else {
+            $this->denyAccessUnlessGranted('projet.employe', $projet);
         }
 
         $this->entityManager->remove($tache);
@@ -70,9 +75,12 @@ class TacheController extends AbstractController
     public function tache(int $id, Request $request): Response
     {
         $tache = $this->tacheRepository->find($id);
+        $projet = $tache->getProjet();
 
-        if (!$tache || $tache->getProjet()->isArchive()) {
+        if (!$tache || !$projet || $projet->isArchive()) {
             return $this->redirectToRoute('app_projets');
+        } else {
+            $this->denyAccessUnlessGranted('projet.employe', $projet);
         }
 
         $form = $this->createForm(TacheType::class, $tache, ['projet' => $tache->getProjet()]);
