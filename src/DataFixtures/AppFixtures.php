@@ -10,9 +10,13 @@ use App\Entity\Tache;
 use App\Entity\Statut;
 use \DateTime;
 use \DateInterval;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+
+    public function __construct(private UserPasswordHasherInterface $hasher) {}
+
     public function load(ObjectManager $manager): void
     {
         // Création des statuts
@@ -29,13 +33,35 @@ class AppFixtures extends Fixture
         $manager->persist($done);
 
 
+        // Création des projets
+        $projet1 = new Projet();
+        $projet1
+            ->setNom('TaskLinker')
+            ->setArchive(false);
+        $manager->persist($projet1);
+
+        $projet2 = new Projet();
+        $projet2
+            ->setNom('Application mobile Grand Nancy')
+            ->setArchive(true);
+        $manager->persist($projet2);
+
+        $projet3 = new Projet();
+        $projet3
+            ->setNom('Site vitrine Les Soeurs Marchand')
+            ->setArchive(false);
+        $manager->persist($projet3);
+
         // Création des employés
         $employe1 = new Employe();
         $employe1->setNom('Dillon')
             ->setPrenom('Natalie')
             ->setEmail('natalie@driblet.com')
             ->setStatut('CDI')
-            ->setDateArrivee(new DateTime('2019-06-14'));
+            ->setDateArrivee(new DateTime('2019-06-14'))
+            ->setPassword($this->hasher->hashPassword($employe1, 'password'))
+            ->addProjet($projet1)
+            ->addProjet($projet3);
         $manager->persist($employe1);
 
         $employe2 = new Employe();
@@ -43,7 +69,11 @@ class AppFixtures extends Fixture
             ->setPrenom('Demi')
             ->setEmail('demi@driblet.com')
             ->setStatut('CDD')
-            ->setDateArrivee(new DateTime('2022-09-01'));
+            ->setDateArrivee(new DateTime('2022-09-01'))
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPassword($this->hasher->hashPassword($employe2, 'password'))
+            ->addProjet($projet1)
+            ->addProjet($projet2);
         $manager->persist($employe2);
 
         $employe3 = new Employe();
@@ -51,33 +81,12 @@ class AppFixtures extends Fixture
             ->setPrenom('Marie')
             ->setEmail('marie@driblet.com')
             ->setStatut('Freelance')
-            ->setDateArrivee(new DateTime('2021-12-20'));
+            ->setDateArrivee(new DateTime('2021-12-20'))
+            ->setPassword($this->hasher->hashPassword($employe3, 'password'))
+            ->addProjet($projet2)
+            ->addProjet($projet3);
         $manager->persist($employe3);
 
-        // Création des projets
-        $projet1 = new Projet();
-        $projet1
-            ->setNom('TaskLinker')
-            ->setArchive(false)
-            ->addEmploye($employe1)
-            ->addEmploye($employe2);
-        $manager->persist($projet1);
-
-        $projet2 = new Projet();
-        $projet2
-            ->setNom('Application mobile Grand Nancy')
-            ->setArchive(true)
-            ->addEmploye($employe2)
-            ->addEmploye($employe3);
-        $manager->persist($projet2);
-
-        $projet3 = new Projet();
-        $projet3
-            ->setNom('Site vitrine Les Soeurs Marchand')
-            ->setArchive(false)
-            ->addEmploye($employe1)
-            ->addEmploye($employe3);
-        $manager->persist($projet3);
 
         // Création des tâches
         $tache0 = new Tache();
@@ -119,7 +128,7 @@ class AppFixtures extends Fixture
             ->setDescription('Vérifier avant que tout fonctionne bien !')
             ->setStatut($todo)
             ->setProjet($projet2);
-        $manager->persist($projet2);
+        $manager->persist($tache4);
 
         $tache5 = new Tache();
         $tache5->setTitre('Réalisation des maquettes')
